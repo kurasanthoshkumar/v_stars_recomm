@@ -35,7 +35,8 @@ class CategorizeProfile:
 				if self.configDict[key][key1] not in attributeScore[key1]:
 					attributeScore[key1][self.configDict[key][key1]] = []	
 				
-				attributeScore[key1][self.configDict[key][key1]].append(outputDict[key])
+				if outputDict[key] != None:
+					attributeScore[key1][self.configDict[key][key1]].append(outputDict[key])
 		topAttribute = {}
 		for key in attributeScore:
 			minval=9999999999
@@ -46,6 +47,7 @@ class CategorizeProfile:
 					minval = attributeScore[key][key1]
 					mincat = key1
 			topAttribute[key] = mincat
+		print attributeScore
 		return topAttribute	
 
 	def categorize(self):
@@ -53,6 +55,9 @@ class CategorizeProfile:
 		compareImages = CompareImages()
 		for key in self.configDict:
 			mse = compareImages.get_mse(self.productPathPrefix + key, self.profile_pic_path)	
+			print self.configDict[key]
+			print mse
+			print "========================================"
 			outputDict[key] = mse
 		print "\nBelow are the attributes for " + self.fbuid			
 		print self.getAttributes(outputDict)	
