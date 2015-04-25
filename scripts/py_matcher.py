@@ -94,7 +94,7 @@ for m,n in matches:
 
 # cv2.drawMatchesKnn expects list of lists as matches.
 img3 = cv2.drawMatchesKnn(img1,kp1,img2,kp2,good,flags=2)
-
+print img3
 #print drawMatches(img1,kp1,img2,kp2,good)
 
 #plt.imshow(img3),plt.show()
