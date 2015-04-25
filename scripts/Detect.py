@@ -28,7 +28,9 @@ def get_body(filepath):
  
     if (max_w > 0):
         body = img[max_y+max_h:max_y+max_h+(4*max_h), max_x-max_w:max_x+max_w+max_w]
-        return body
+        cv2.imwrite("/tmp/"+os.path.splitext(os.path.basename(filepath))[0]+"_trim.jpg",body)
+        return "/tmp/"+os.path.splitext(os.path.basename(filepath))[0]+"_trim.jpg"
 
     else:
-        return img    
+        cv2.imwrite("/tmp/"+os.path.splitext(os.path.basename(filepath))[0]+"_trim.jpg",img)
+        return "/tmp/"+os.path.splitext(os.path.basename(filepath))[0]+"_trim.jpg"
