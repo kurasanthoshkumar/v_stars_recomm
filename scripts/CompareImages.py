@@ -7,7 +7,7 @@ import Image
 import random
 import os
 
-class CompareImage:
+class CompareImages:
 	reqImgWidth=180
 	reqImgHeight=240
 	def __init__(self):
@@ -66,7 +66,7 @@ class CompareImage:
 			print "IOError while resizing " + imagePath
 			return None
 		
-#ci = CompareImage()
+#ci = CompareImages()
 #print ci.resizeImage("images/p1.jpg", 180, 240)
 #print ci.get_mse("images/142338.jpg", "images/p1.jpg")	
 
