@@ -10,16 +10,20 @@ class CategorizeProfile:
 	configDict = {}
 	imageConfig = "image_attributes.cfg"
 	productPathPrefix="images/"
+	gender = None
 	def __init__(self, fbuid):
 		print "Categorize Profile Initialized"
 		self.fbuid = fbuid
 		self.profile_pic_path = self.storeFBImageLocally()
 		cFO = open(self.imageConfig, "r")
 		self.configDict = ast.literal_eval(cFO.read())
-	
+		
+		fbutil = FBUtil()	
+		self.gender = fbutil.getGender(self.fbuid)
+			
 	def storeFBImageLocally(self):
 		outfile = "profileimages/"+str(self.fbuid)+".jpg"
-		fbutil = FBUtil()
+		fbutil = FBUtil()	
 		URL = fbutil.getFBProfilePicUrl(self.fbuid)
 		file = cStringIO.StringIO(urllib.urlopen(URL).read())
 		img = Image.open(file)
@@ -54,11 +58,12 @@ class CategorizeProfile:
 		outputDict = {}
 		compareImages = CompareImages()
 		for key in self.configDict:
-			mse = compareImages.get_mse(self.productPathPrefix + key, self.profile_pic_path)	
-			print self.configDict[key]
-			print mse
-			print "========================================"
-			outputDict[key] = mse
+			if self.gender==None or (self.gender=="male" and self.configDict[key]['gender']=="M") or (self.gender=="female" and self.configDict[key]['gender']=="F"):
+				mse = compareImages.get_mse(self.productPathPrefix + key, self.profile_pic_path)	
+				print self.configDict[key]
+				print mse
+				print "========================================"
+				outputDict[key] = mse
 		print "\nBelow are the attributes for " + self.fbuid			
 		print self.getAttributes(outputDict)	
 
