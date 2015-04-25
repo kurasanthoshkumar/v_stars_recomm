@@ -3,7 +3,7 @@ from skimage.measure import structural_similarity as ssim
 import matplotlib.pyplot as plt
 import numpy as np
 import cv2
-import Image
+import Image, ImageChops
 import random
 import os
 
@@ -53,17 +53,26 @@ class CompareImages:
 			return outfile
 
 		try:
+			size = (width,height)
 			im = Image.open(imagePath)		
 			if im.size[0]==self.reqImgWidth and im.size[1]==self.reqImgHeight:
 				return imagePath
-            		im.thumbnail((width,height), Image.ANTIALIAS)
-            		im.save(outfile, "JPEG")
+            		im.thumbnail(size, Image.ANTIALIAS)
+
+
+			image_size = im.size
+			thumb = im.crop( (0, 0, size[0], size[1]) )
+			offset_x = max( (size[0] - image_size[0]) / 2, 0 )
+			offset_y = max( (size[1] - image_size[1]) / 2, 0 )
+			thumb = ImageChops.offset(thumb, offset_x, offset_y)
+
+            		thumb.save(outfile, "JPEG")
 			return outfile
 		except IOError:
 			print "IOError while resizing " + imagePath
 			return None
 		
 #ci = CompareImages()
-#print ci.resizeImage("images/p1.jpg", 180, 240)
+#print ci.resizeImage("profileimages/kurasanthoshkumar.jpg", 180, 240)
 #print ci.get_mse("images/142338.jpg", "images/p1.jpg")	
 
