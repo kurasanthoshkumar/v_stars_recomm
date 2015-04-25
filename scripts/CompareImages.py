@@ -28,12 +28,9 @@ class CompareImages:
 	def get_mse(self, imagePath1, imagePath2):
 		resizedImage1 = self.resizeImage(imagePath1, self.reqImgWidth, self.reqImgHeight)
 		resizedImage2 = self.resizeImage(imagePath2, self.reqImgWidth, self.reqImgHeight)
-		
 		if resizedImage1 == None or resizedImage1 == None:
 			return None
 
-		print resizedImage1
-		print resizedImage2
 		i1 = cv2.imread(resizedImage1)
 		i2 = cv2.imread(resizedImage2)
 		
