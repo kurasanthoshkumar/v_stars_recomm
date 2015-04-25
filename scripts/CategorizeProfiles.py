@@ -3,6 +3,7 @@ from CompareImages import *
 import urllib, cStringIO
 import Image
 import ast
+import sys
 class CategorizeProfile:
 	fbuid = ""
 	profile_pic_path = ""
@@ -37,7 +38,7 @@ class CategorizeProfile:
 				attributeScore[key1][self.configDict[key][key1]].append(outputDict[key])
 		topAttribute = {}
 		for key in attributeScore:
-			minval=0
+			minval=9999999999
 			mincat=""
 			for key1 in attributeScore[key]:
 				attributeScore[key][key1] = sum(attributeScore[key][key1])/len(attributeScore[key][key1])
@@ -45,16 +46,22 @@ class CategorizeProfile:
 					minval = attributeScore[key][key1]
 					mincat = key1
 			topAttribute[key] = mincat
-		print topAttribute	
+		return topAttribute	
+
 	def categorize(self):
 		outputDict = {}
 		compareImages = CompareImages()
 		for key in self.configDict:
 			mse = compareImages.get_mse(self.productPathPrefix + key, self.profile_pic_path)	
 			outputDict[key] = mse
-			
+		print "\nBelow are the attributes for " + self.fbuid			
 		print self.getAttributes(outputDict)	
 
-		
-cp = CategorizeProfile(1837424483)
+
+if len(sys.argv) <=1:
+	print "Usage: python " + sys.argv[0] + " <fbuid>"		
+	exit
+#fbuid = 1837424483
+fbuid = sys.argv[1]
+cp = CategorizeProfile(fbuid)
 cp.categorize()
