@@ -3,8 +3,13 @@ from skimage.measure import structural_similarity as ssim
 import matplotlib.pyplot as plt
 import numpy as np
 import cv2
+import Image
+import random
+import os
 
 class CompareImage:
+	reqImgWidth=180
+	reqImgHeight=240
 	def __init__(self):
 		print "Initialized CompareImage"
 
@@ -21,8 +26,16 @@ class CompareImage:
 
 	
 	def get_mse(self, imagePath1, imagePath2):
-		i1 = cv2.imread(imagePath1)
-		i2 = cv2.imread(imagePath2)
+		resizedImage1 = self.resizeImage(imagePath1, self.reqImgWidth, self.reqImgHeight)
+		resizedImage2 = self.resizeImage(imagePath2, self.reqImgWidth, self.reqImgHeight)
+		
+		if resizedImage1 == None or resizedImage1 == None:
+			return None
+
+		print resizedImage1
+		print resizedImage2
+		i1 = cv2.imread(resizedImage1)
+		i2 = cv2.imread(resizedImage2)
 		
 		# convert the images to grayscale
 		i1 = cv2.cvtColor(i1, cv2.COLOR_BGR2GRAY)
@@ -31,5 +44,29 @@ class CompareImage:
 		m = self._mse(i1, i2)
 		return m
 
+
+	def resizeImage(self, imagePath, width, height):
+		outfile=imagePath+"_"+str(width)+"_"+str(height)
+		if not os.path.isfile(imagePath):
+			print imagePath + " does not exist"
+			return None
+
+		#if resized file already exists, return the same
+		if os.path.isfile(outfile):
+			return outfile
+
+		try:
+			im = Image.open(imagePath)		
+			if im.size[0]==self.reqImgWidth and im.size[1]==self.reqImgHeight:
+				return imagePath
+            		im.thumbnail((width,height), Image.ANTIALIAS)
+            		im.save(outfile, "JPEG")
+			return outfile
+		except IOError:
+			print "IOError while resizing " + imagePath
+			return None
+		
 #ci = CompareImage()
-#print ci.get_mse("images/142338.jpg", "images/482351.jpg")	
+#print ci.resizeImage("images/p1.jpg", 180, 240)
+#print ci.get_mse("images/142338.jpg", "images/p1.jpg")	
+
